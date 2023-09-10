@@ -1,0 +1,48 @@
+---
+import PostCard from "./PostCard.astro";
+import { allPosts } from "../../utils/queries";
+const query = {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    query: allPosts,
+  }),
+};
+
+const response = await fetch(import.meta.env.HYGRAPH_ENDPOINT, query);
+const json = await response.json();
+const posts = json.data.posts;
+console.log(Object.keys(posts[0]));
+---
+
+<div class="recent__posts">
+  <h3 class="label">Recent Posts</h3>
+
+  <div class="posts">
+    {!posts ? "No available post" : posts.map((post) => <PostCard {...post} />)}
+  </div>
+</div>
+
+<style>
+  .recent__posts {
+    margin-block: 0px;
+    padding: 0 20px;
+  }
+
+  .label {
+    margin: 50px 0 10px 0;
+    font-weight: bold;
+    font-size: 25px;
+  }
+
+  .posts {
+    display: grid;
+    gap: 20px;
+  }
+
+  @media only screen and (min-width: 768px) {
+    .posts {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

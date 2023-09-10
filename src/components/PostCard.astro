@@ -1,0 +1,68 @@
+---
+const { title, slug, excerpt, author, coverImage } = Astro.props;
+---
+
+<div class="postcard">
+  <img src={`${coverImage.url}`} alt="" class="post__thumbnail" />
+
+  <div class="post__details">
+    <a href={`/post/${slug}`}><span class="post__title">{title}</span></a>
+    <div class="post__excert">
+      {excerpt}
+    </div>
+    <div class="post__author">
+      <img src={`${author?.picture?.url}`} alt="" class="author__img" />
+      <span class="author__name">J{author.name}</span>
+      <span>◾</span>
+      <span class="post_published_date">19 Jan 2022</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .postcard {
+    height: 450px;
+    display: grid;
+    grid-template-rows: 55% 45%;
+  }
+
+  .post__thumbnail {
+    background: #000;
+    border-radius: 10px;
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+  }
+
+  .post__details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post__title {
+    font-weight: bold;
+    font-size: 25px;
+    margin-block: 10px;
+    display: block;
+    flex: 2;
+  }
+
+  .post_excert {
+    flex: 1;
+    margin-bottom: 10px;
+  }
+
+  .post__author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    flex: 2;
+  }
+
+  .author__img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+  }
+</style>

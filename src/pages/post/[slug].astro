@@ -1,0 +1,155 @@
+---
+const { slug } = Astro.params;
+import MainLayout from "src/layouts/MainLayout.astro";
+import { marked } from "marked";
+import { getMatchPost, getPostComments } from "../../../utils/queries";
+import Related from "@components/Related.astro";
+
+const response = await fetch(import.meta.env.HYGRAPH_ENDPOINT, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    query: getMatchPost,
+    variables: {
+      slug,
+    },
+  }),
+});
+
+const json = await response.json();
+const { post } = json.data;
+
+console.log(post);
+
+if (post) {
+  const response = await fetch(import.meta.env.HYGRAPH_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query: getPostComments,
+      variables: {
+        id: post.id,
+      },
+    }),
+  });
+
+  const json = await response.json();
+  const comments = json.data;
+
+  console.log(comments);
+}
+---
+
+<MainLayout>
+  <div class="container">
+    <div class="related">
+      <h2 class="label">Related</h2>
+      <Related />
+      <Related />
+      <Related />
+    </div>
+
+    {
+      !post ? (
+        <p>No Post Found</p>
+      ) : (
+        <div class="content">
+          <h1 class="post__title">{post.title}</h1>
+          <div class="post__published_detail">
+            <span>
+              <b>
+                {new Date(post.createdAt).toLocaleString("default", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </b>
+            </span>
+            <span>{post.author.name}</span>
+          </div>
+          <img
+            src={`${post.coverImage.url}`}
+            alt={`${post.coverImage.fileName}`}
+            class="post__thumbnail"
+          />
+
+          <div class="post__content" set:html={marked(post.content.markdown)} />
+        </div>
+      )
+    }
+  </div>
+</MainLayout>
+
+<style>
+  .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "content"
+      "related";
+  }
+
+  .content {
+    padding: 0;
+    width: 100%;
+    grid-area: content;
+  }
+
+  /* .post__title {
+    text-align: center;
+  } */
+
+  .post__published_detail {
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .post__content {
+    gap: 0.5em;
+    display: grid;
+  }
+
+  .post__thumbnail {
+    height: 400px;
+    width: 100%;
+    margin: 20px auto;
+    justify-self: center;
+    display: flex;
+    background: lightgrey;
+    object-fit: fill;
+  }
+
+  .post__content {
+    font-size: 20px;
+    padding: 30px 0;
+  }
+  .related {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    grid-area: related;
+    margin-top: 50px;
+  }
+  .label {
+    border-bottom: 2px solid #000;
+  }
+
+  @media only screen and (min-width: 768px) {
+    .container {
+      grid-template-columns: 30% 70%;
+      min-height: 100vh;
+      grid-template-areas: "related content";
+    }
+    .content {
+      padding: 0 100px 20px 100px;
+      width: 100%;
+    }
+    .related {
+      margin-top: 0;
+      gap: 2em;
+    }
+  }
+</style>

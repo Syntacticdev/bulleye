@@ -1,0 +1,146 @@
+---
+import { Icon } from "astro-icon";
+---
+
+<header>
+  <a href="/" class="header__logo">BULLEYE</a>
+
+  <nav class="header__nav">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/funny">Funny</a></li>
+      <li><a href="/gossip">Gossip</a></li>
+      <li><a href="/entertainment">Entertainment</a></li>
+      <li><a href="/authors">Face of Authors</a></li>
+      <li><a href="/project">Project</a></li>
+    </ul>
+  </nav>
+
+  <button class="header__button">
+    <Icon pack="mdi" name="account" />
+  </button>
+</header>
+
+<style>
+  .mi {
+    height: 40px;
+    width: 40px;
+    color: red;
+  }
+  header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "logo button"
+      "nav nav";
+    padding: 30px 0;
+  }
+
+  .header__logo {
+    grid-area: logo;
+    text-decoration: none;
+    font-size: 30px;
+    color: #000;
+    font-weight: bold;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  }
+
+  .header__button {
+    grid-area: button;
+    display: flex;
+    justify-content: flex-end;
+    width: fit-content;
+    height: fit-content;
+    justify-self: flex-end;
+    cursor: pointer;
+    padding: 8px 10px;
+    /* background: #000; */
+    color: #fff;
+    border: none;
+    outline: none;
+  }
+
+  .header__nav {
+    grid-area: nav;
+    /* display: none; */
+    padding: 10px 0;
+    transition: all 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    height: 0;
+    overflow-y: hidden;
+  }
+
+  .header__nav.active {
+    /* display: flex; */
+    height: 100%;
+  }
+
+  .header__nav ul {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    list-style: none;
+    padding: 20px 0;
+  }
+
+  .header__nav li:not(:last-child) {
+    border-bottom: 2px solid #000;
+    padding: 5px 0;
+  }
+
+  .header__nav ul a {
+    font-weight: bold;
+    font-size: 30px;
+    color: #000;
+
+    &:hover {
+      font-weight: 100;
+    }
+  }
+
+  @media only screen and (min-width: 768px) {
+    header {
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas: "logo nav button";
+    }
+  }
+
+  @media only screen and (min-width: 768px) {
+    .header__nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .header__button {
+      display: none;
+    }
+
+    .header__nav ul {
+      flex-direction: row;
+      width: fit-content;
+    }
+    .header__nav li:not(:last-child) {
+      all: unset;
+    }
+    .header__nav ul a {
+      font-size: 20px;
+
+      &:hover {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        font-weight: bold;
+      }
+    }
+  }
+</style>
+
+<script>
+  const headerBtn = document.querySelector(".header__button");
+  const headerNav = document.querySelector(".header__nav");
+
+  headerBtn.addEventListener("click", () => {
+    headerNav.classList.toggle("active");
+  });
+</script>
