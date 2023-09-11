@@ -1,9 +1,11 @@
 import { defineConfig } from 'astro/config';
-import nodejs from '@astrojs/node';
+import vercel from '@astrojs/vercel/serverless';
 
 // https://astro.build/config
 export default defineConfig({
-    output: "server",
-    cacheDir: "./src/pages/post/[slug].astro",
-    adapter: nodejs({ mode: 'middleware' }),
+  output: 'server',
+  adapter: vercel(),
+cacheDir: "./src/pages/post/[slug].astro",
 });
+
+
